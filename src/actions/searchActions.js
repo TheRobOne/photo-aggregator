@@ -8,7 +8,7 @@ export const searchPhotos = () => dispatch => {
         .then(res => {
             dispatch({
                 type: SEARCH,
-                paylaod: res.request.response
+                payload: res.request.response
             })
         })
         .catch(err => 
