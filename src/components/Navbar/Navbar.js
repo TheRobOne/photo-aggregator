@@ -1,7 +1,60 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { fade } from '@material-ui/core/styles/colorManipulator';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
+
 import { searchPhotos } from '../../actions/searchActions';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+
+const styles = theme => ({
+    root: {
+      flexGrow: 1,
+    },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+          backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginRight: theme.spacing.unit * 2,
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+          marginLeft: theme.spacing.unit * 3,
+          width: 'auto',
+        },
+    },
+    searchIcon: {
+        width: theme.spacing.unit * 9,
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+        width: '100%',
+    },
+    inputInput: {
+        paddingTop: theme.spacing.unit,
+        paddingRight: theme.spacing.unit,
+        paddingBottom: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 10,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('md')]: {
+          width: 200,
+        },
+    }
+  });
 
 class Navbar extends Component {
 
@@ -19,33 +72,52 @@ class Navbar extends Component {
         event.preventDefault();
     
         this.props.searchPhotos(this.state.searchInput);
+        console.log(this.state)
+
+        this.setState({searchInput: 'Search for photos...'});
       }
 
     onChange(event) {
         this.setState({ [event.target.name]: event.target.value})
     }
 
-
     render() {
+        const { classes } = this.props;
         return (
-            <nav className="navbar navbar-light bg-light">
-                <a className="navbar-brand">Navbar</a>
-                <form className="form-inline" onSubmit={event => this.onSubmit(event)}>
-                    <input className="form-control mr-sm-2" type="search" placeholder="Search for photos..." 
-                        aria-label="Search" name="searchInput" value={this.state.searchInput} onChange={this.onChange}
-                    />
-                    <button className="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-                </form>
-            </nav>
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography variant="h6" color="inherit">
+                            Photos
+                        </Typography>
+                        <form onSubmit={event => this.onSubmit(event)}>
+                        <div className={classes.search}>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                                }}
+                                name="searchInput"
+                                onChange={this.onChange}
+                            />
+                        </div>
+                        </form>
+                    </Toolbar>
+                </AppBar>
+            </div>
         );
     }
 };
 
 Navbar.propTypes = {
     searchPhotos: PropTypes.func.isRequired
-  };
+};
   
-  const mapStateToProps = state => ({
-  });
+const mapStateToProps = state => ({
+});
 
-export default connect(mapStateToProps, { searchPhotos })(Navbar);
+export default connect(mapStateToProps, { searchPhotos })(withStyles(styles)(Navbar));
