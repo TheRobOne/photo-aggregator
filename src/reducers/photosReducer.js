@@ -1,15 +1,15 @@
-import { SEARCH } from '../actions/types';
+import { GET_INITIAL_PHOTOS } from '../actions/types';
 
 const initialState = {
-    searchResults: []
+    initialPhotos: []
 }
 
 export default function(state = initialState, action) {
     switch(action.type) {
-        case SEARCH:
+        case GET_INITIAL_PHOTOS:
             return {
                 ...state,
-                searchResults: action.payload
+                initialPhotos: action.payload
             }
         default:
             return state;

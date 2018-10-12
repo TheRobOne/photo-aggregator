@@ -26,7 +26,6 @@ class Navbar extends Component {
 
 Navbar.propTypes = {
     searchPhotos: PropTypes.func.isRequired
-    //rooms_list: PropTypes.object.isRequired
   };
   
   const mapStateToProps = state => ({
