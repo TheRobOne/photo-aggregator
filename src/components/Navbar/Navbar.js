@@ -50,9 +50,12 @@ const styles = theme => ({
         paddingLeft: theme.spacing.unit * 10,
         transition: theme.transitions.create('width'),
         width: '100%',
-        [theme.breakpoints.up('md')]: {
-          width: 200,
+        [theme.breakpoints.up('sm')]: {
+            width: 120,
+            '&:focus': {
+              width: 200,
         },
+    }
     }
   });
 
@@ -72,7 +75,6 @@ class Navbar extends Component {
         event.preventDefault();
     
         this.props.searchPhotos(this.state.searchInput);
-        console.log(this.state)
 
         this.setState({searchInput: 'Search for photos...'});
       }
@@ -114,7 +116,8 @@ class Navbar extends Component {
 };
 
 Navbar.propTypes = {
-    searchPhotos: PropTypes.func.isRequired
+    searchPhotos: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired
 };
   
 const mapStateToProps = state => ({

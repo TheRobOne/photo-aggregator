@@ -1,45 +1,58 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import './Gallery.css';
-import axios from 'axios';
-import Photo from '../Photo/Photo';
 import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+
 import { getInitialPhotos } from '../../actions/photosActions';
+
+const styles = theme => ({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'space-around',
+      overflow: 'hidden',
+      backgroundColor: theme.palette.background.paper,
+    },
+    gridList: {
+      width: 1000,
+      height: '100%',
+    },
+    subheader: {
+      width: '100%',
+    },
+  });
 
 class Gallery extends Component {
 
     componentWillMount() {
         this.props.getInitialPhotos();
-        //this.loadPhotos()
-    }
-
-    loadPhotos(){
-        axios.get('https://pixabay.com/api/?key=6771879-3964c448f80d04a7a92b37074&q=yellow+flowers&image_type=photoA&page=1&per_page=5')
-        .then(res => {
-            this.setState({photos: res.data.hits})
-        })
-        .catch(() =>
-            this.setState({photos: null})
-        );
     }
 
     render() {
+        const { classes } = this.props;
         let photosList = null;
+
         if (this.props.searchResults.searchResults.length === 0){
             photosList = this.props.initialPhotos.initialPhotos.map((photo) => 
-            <Photo photo={photo.largeImageURL} key={photo.id} />
+                <GridListTile key={photo.id} cols={1}>
+                    <img src={photo.largeImageURL} alt="from-pixabay"/>
+                </GridListTile>
         );
         } else {
             photosList = this.props.searchResults.searchResults.map((photo) => 
-                <Photo photo={photo.largeImageURL} key={photo.id} />
+                <GridListTile key={photo.id} cols={1}>
+                    <img src={photo.largeImageURL} alt="from-pixabay"/>
+                </GridListTile>
             );
         }
         
         return (
-            <div>
-                <ul>
+            <div className={classes.root}>
+                <GridList cellHeight={160} className={classes.gridList} cols={3}>
                     {photosList}
-                </ul>
+                </GridList>
             </div>
         )
     }
@@ -54,4 +67,4 @@ const mapStateToProps = state => ({
     searchResults: state.searchResults
 });
 
-export default connect(mapStateToProps, { getInitialPhotos })(Gallery);
+export default connect(mapStateToProps, { getInitialPhotos })(withStyles(styles)(Gallery));
