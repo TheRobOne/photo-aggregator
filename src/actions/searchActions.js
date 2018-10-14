@@ -3,12 +3,23 @@ import axios from 'axios';
 import { SEARCH } from './types';
 
 //search for photos
-export const searchPhotos = (tag) => dispatch => {
-    axios.get(`https://pixabay.com/api/?key=6771879-3964c448f80d04a7a92b37074&q=${tag}&image_type=photo&pretty=true&page=1&per_page=25`)
+export const searchPhotos = (tag, pageNumber) => dispatch => {
+    axios.get(`https://pixabay.com/api/?key=6771879-3964c448f80d04a7a92b37074&q=${tag}&image_type=photo&pretty=true&page=${pageNumber}&per_page=25`)
         .then(res => {
+            let photoList = [];
+            let photoListItem = {};
+            res.data.hits.map(photo => {
+                photoListItem = {
+                    url: photo.largeImageURL,
+                    id: photo.id,
+                    user: photo.user,
+                    tag: tag
+                }
+                photoList.push(photoListItem);
+            });
             dispatch({
                 type: SEARCH,
-                payload: res.data.hits
+                payload: photoList
             })
         })
         .catch(err => 
