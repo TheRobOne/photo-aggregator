@@ -9,6 +9,7 @@ import { getInitialPhotos } from '../../actions/photosActions';
 
 const styles = theme => ({
     root: {
+      marginTop: 10,
       display: 'flex',
       flexWrap: 'wrap',
       justifyContent: 'space-around',
