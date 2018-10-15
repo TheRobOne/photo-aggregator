@@ -74,7 +74,7 @@ class Navbar extends Component {
     onSubmit(event) {
         event.preventDefault();
     
-        this.props.searchPhotos(this.state.searchInput);
+        this.props.searchPhotos(this.state.searchInput, 1);
 
         this.setState({searchInput: 'Search for photos...'});
       }
