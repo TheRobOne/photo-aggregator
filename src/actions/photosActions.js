@@ -14,7 +14,7 @@ export const getInitialPhotos = () => dispatch => {
                     id: photo.id,
                     user: photo.user
                 }
-                photoList.push(photoListItem);
+                return photoList.push(photoListItem);
             });
             dispatch({
                 type: GET_INITIAL_PHOTOS,
@@ -24,7 +24,7 @@ export const getInitialPhotos = () => dispatch => {
         .catch(err => 
             dispatch({
                 type: GET_INITIAL_PHOTOS,
-                paylaod: null
+                payload: null
             })
         );
 }
