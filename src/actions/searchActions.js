@@ -17,20 +17,28 @@ export const searchPhotos = (tag, pageNumber) => dispatch => {
 
         pixabayRes.data.hits.map(photo => {
             photoListItem = {
-                url: photo.largeImageURL,
+                fullImageURL: photo.largeImageURL,
+                smallImageURL: photo.webformatURL,
                 id: photo.id,
                 user: photo.user,
-                tag: tag
+                userURL: `https://pixabay.com/en/users/${photo.user}-${photo.user_id}/`,
+                userAvatar: photo.userImageURL,
+                tag: tag,
+                provider: 'pixabay'
             }
             return photoList.push(photoListItem);
         });
 
         unsplashRes.data.results.map(photo => {
             photoListItem = {
-                url: photo.urls.full,
+                fullImageURL: photo.urls.full,
+                smallImageURL: photo.urls.small,
                 id: photo.id,
                 user: photo.user.username,
-                tag: tag
+                userURL: `https://unsplash.com/@${photo.user.username}`,
+                userAvatar: photo.user.profile_image.small,
+                tag: tag,
+                provider: 'unsplash'
             }
             return photoList.push(photoListItem);
         });
