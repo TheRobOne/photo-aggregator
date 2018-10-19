@@ -13,8 +13,7 @@ import Dialog from '@material-ui/core/Dialog';
 import red from '@material-ui/core/colors/red';
 import DialogContent from '@material-ui/core/DialogContent';
 
-import { getInitialPhotos } from '../../actions/photosActions';
-import { searchPhotos } from '../../actions/searchActions';
+import { searchPhotos } from '../../actions/photosActions';
 import Pagination from '../Pagination/Pagination';
 
 const styles = theme => ({
@@ -61,10 +60,6 @@ class Gallery extends Component {
         currentPhoto: '',
         dialogType: ''
     }
-    
-    componentWillMount() {
-        this.props.getInitialPhotos();
-    }
 
     onClick(photo, iconType){
         this.setState({open: true, currentPhoto: photo, dialogType: iconType});
@@ -101,20 +96,7 @@ class Gallery extends Component {
 
 
         if (this.props.searchResults.searchResults.length === 0){
-            photosList = this.props.initialPhotos.initialPhotos.map((photo) => 
-                <GridListTile key={photo.id} cols={1}>
-                    <img src={photo.url} alt="from-pixabay"/>
-                    <GridListTileBar
-                        title={"from: " + photo.provider}
-                        subtitle={<span>by: Author</span>}
-                        actionIcon={
-                        <IconButton className={classes.icon} onClick={() => this.onClick(photo)}>
-                            <Fullscreen />
-                        </IconButton>
-                        }
-                    />
-                </GridListTile>
-        );
+            photosList = (<div><h1>tu bedzie initial page</h1></div>)
         } else {
             photosList = this.props.searchResults.searchResults.map((photo) => 
                 <GridListTile key={photo.id} cols={1}>
@@ -158,13 +140,11 @@ class Gallery extends Component {
 }
 
 Gallery.propTypes = {
-    getInitialPhotos: PropTypes.func.isRequired,
     searchPhotos: PropTypes.func.isRequired
   };
 
 const mapStateToProps = state => ({
-    initialPhotos: state.initialPhotos,
     searchResults: state.searchResults
 });
 
-export default connect(mapStateToProps, { getInitialPhotos, searchPhotos })(withStyles(styles)(Gallery));
+export default connect(mapStateToProps, { searchPhotos })(withStyles(styles)(Gallery));

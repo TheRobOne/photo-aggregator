@@ -15,7 +15,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import FacebookLogin from "react-facebook-login";
 import Avatar from '@material-ui/core/Avatar';
 
-import { searchPhotos } from '../../actions/searchActions';
+import { searchPhotos } from '../../actions/photosActions';
 import { loginOrRegisterUser } from '../../actions/authorizationActions';
 
 const styles = theme => ({
