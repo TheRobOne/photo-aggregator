@@ -219,10 +219,10 @@ class Navbar extends Component {
                     onClose={this.handleClose}
                 >
                 <DialogTitle id="form-dialog-title">Login</DialogTitle>
-                    <DialogContent>
-                            <span>Use your Facebook account to login. <br/><br/></span>
-                            {fbContent}
-                    </DialogContent>
+                <DialogContent>
+                        <span>Use your Facebook account to login. <br/><br/></span>
+                        {fbContent}
+                </DialogContent>
                 </Dialog>
             </div>
         );

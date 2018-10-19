@@ -7,8 +7,11 @@ import GridListTile from '@material-ui/core/GridListTile';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import IconButton from '@material-ui/core/IconButton';
 import Fullscreen from '@material-ui/icons/Fullscreen';
+import Star from '@material-ui/icons/Star';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
+import red from '@material-ui/core/colors/red';
+import DialogContent from '@material-ui/core/DialogContent';
 
 import { getInitialPhotos } from '../../actions/photosActions';
 import { searchPhotos } from '../../actions/searchActions';
@@ -41,23 +44,37 @@ const styles = theme => ({
     },
     icon: {
       color: 'rgba(255, 255, 255, 0.54)',
-      fontSize: 'large'
     },
+    iconHover: {
+        margin: theme.spacing.unit * 2,
+        color: 'rgba(255, 255, 255, 0.54)',
+        '&:hover': {
+          color: red[800],
+        },
+    }
   });
 
 class Gallery extends Component {
 
     state = {
         open: false,
-        currentPhoto: ''
+        currentPhoto: '',
+        dialogType: ''
     }
     
     componentWillMount() {
         this.props.getInitialPhotos();
     }
 
-    onClick(photo){
-        this.setState({open: true, currentPhoto: photo})
+    onClick(photo, iconType){
+        this.setState({open: true, currentPhoto: photo, dialogType: iconType});
+    }
+
+    onClickStar(photo, iconType){
+        if (sessionStorage.getItem("userID")) {
+        } else {
+            this.setState({open: true, currentPhoto: photo, dialogType: iconType});
+        }
     }
 
     handleClose = () => {
@@ -68,6 +85,20 @@ class Gallery extends Component {
         const { classes } = this.props;
         let photosList = null;
         let pagination = null;
+        let dialogContent = null;
+
+        if(this.state.dialogType === 'fullscreen'){
+            dialogContent = (
+                <img src={this.state.currentPhoto.fullImageURL} alt="" style={{ width: '100%', height:'100%' }} />
+            );
+        } else if (!sessionStorage.getItem("userID")) {
+            dialogContent = (
+                <DialogContent>
+                        <span>You have to been loged in first.<br/><br/></span>
+                </DialogContent>
+            );
+        }
+
 
         if (this.props.searchResults.searchResults.length === 0){
             photosList = this.props.initialPhotos.initialPhotos.map((photo) => 
@@ -92,19 +123,20 @@ class Gallery extends Component {
                     title={"from: " + photo.provider}
                         subtitle={<Button className={classes.button} href={photo.userURL}>by: {photo.user}</Button>}
                         actionIcon={
-                            <IconButton className={classes.icon} onClick={() => this.onClick(photo)}>
-                            <Fullscreen />
-                        </IconButton>
+                            <div>
+                            <IconButton className={classes.iconHover} onClick={() => this.onClickStar(photo, "star")}>
+                                <Star />
+                            </IconButton>
+                            <IconButton className={classes.icon} onClick={() => this.onClick(photo, "fullscreen")}>
+                                <Fullscreen />
+                            </IconButton>
+                            </div>
                         }
                     />
                 </GridListTile>
             );
             pagination = <Pagination/>
         }
-
-        const actions = [
-            <Button label="Close" color="primary" onClick={this.handleClose} />
-          ]
         
         return (
             <div>
@@ -113,10 +145,9 @@ class Gallery extends Component {
                         {photosList}
                     </GridList>
                     <Dialog
-                        actions={actions}
                         open={this.state.open}
                         onClose={this.handleClose}>
-                        <img src={this.state.currentPhoto.fullImageURL} alt="" style={{ width: '100%', height:'100%' }} />
+                        {dialogContent}
                     </Dialog>
                 </div>
                 {pagination}
