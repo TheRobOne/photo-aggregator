@@ -33,6 +33,28 @@ export const searchPhotos = (tag, pageNumber) => dispatch => {
     );
 }
 
+export const searchFromOneProvider = (provider, tag, pageNumber) => dispatch => {
+    let url = '';
+    let photoList = [];
+    if(provider === 'pixabay') url = `https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${tag}&image_type=photo&pretty=true&page=${pageNumber}&per_page=15`;
+    else if(provider === 'unsplash') url =`https://api.unsplash.com/search/photos/?client_id=${UNSPLASH_KEY}&query=${tag}&page=${pageNumber}&per_page=15`;
+    axios.get(url)
+    .then(response => {
+        if(provider === 'pixabay') photoList = mapPixabayPhotos(response.data.hits, tag);
+        else if(provider === 'unsplash') photoList = mapUnsplashPhotos(response.data.results, tag);
+        dispatch({
+            type: SEARCH,
+            payload: photoList
+        })
+    })
+    .catch(err => 
+        dispatch({
+            type: SEARCH,
+            payload: null
+        })
+    );
+}
+
 function mapPixabayPhotos(photos, tag) {
     let photoList = [];
     let photoListItem = {};

@@ -12,9 +12,11 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import red from '@material-ui/core/colors/red';
 import DialogContent from '@material-ui/core/DialogContent';
+import axios from 'axios';
 
 import { searchPhotos } from '../../actions/photosActions';
 import Pagination from '../Pagination/Pagination';
+import PhotoProvider from '../PhotoProvider/PhotoProvider';
 
 const styles = theme => ({
     root: {
@@ -50,6 +52,13 @@ const styles = theme => ({
         '&:hover': {
           color: red[800],
         },
+    },
+    iconFavHover: {
+        margin: theme.spacing.unit * 2,
+        color: red[800],
+        '&:hover': {
+          color: 'rgba(255, 255, 255, 0.54)',
+        },
     }
   });
 
@@ -58,7 +67,8 @@ class Gallery extends Component {
     state = {
         open: false,
         currentPhoto: '',
-        dialogType: ''
+        dialogType: '',
+        dialogMessage: 'You have to been loged in first.'
     }
 
     onClick(photo, iconType){
@@ -67,37 +77,58 @@ class Gallery extends Component {
 
     onClickStar(photo, iconType){
         if (sessionStorage.getItem("userID")) {
+            const Photo = {
+                fullPhotoURL: photo.fullImageURL,
+                smallPhotoURL: photo.smallImageURL,
+                userID: sessionStorage.getItem("userID"),
+                author: photo.user,
+                authorURL: photo.userURL,
+                authorAvatar: photo.userAvatar,
+                tag: photo.tag,
+                provider: photo.provider
+            }
+            axios.post('http://localhost:4200/photos/favourite', Photo)
+                .then(res => {
+                })
+                .catch(err => {
+                    console.log("err");
+                    this.setState({open: true, currentPhoto: photo, dialogType: iconType, dialogMessage: 'Error while adding photo to favourities'});
+                })
+
         } else {
-            this.setState({open: true, currentPhoto: photo, dialogType: iconType});
+            this.setState({open: true, currentPhoto: photo});
         }
     }
 
     handleClose = () => {
-        this.setState({ open: false });
+        this.setState({ open: false, dialogMessage: 'You have to been loged in first.' });
       }
 
     render() {
-        const { classes } = this.props;
+        let { classes } = this.props;
+
         let photosList = null;
         let pagination = null;
         let dialogContent = null;
+        let photoProviderChoice = null;
 
         if(this.state.dialogType === 'fullscreen'){
             dialogContent = (
                 <img src={this.state.currentPhoto.fullImageURL} alt="" style={{ width: '100%', height:'100%' }} />
             );
-        } else if (!sessionStorage.getItem("userID")) {
+        } else if (!sessionStorage.getItem("userID") || this.state.dialogType === 'star') {
             dialogContent = (
                 <DialogContent>
-                        <span>You have to been loged in first.<br/><br/></span>
+                        <span>{this.state.dialogMessage}<br/><br/></span>
                 </DialogContent>
             );
-        }
+        } 
 
 
         if (this.props.searchResults.searchResults.length === 0){
             photosList = (<div><h1>tu bedzie initial page</h1></div>)
         } else {
+            photoProviderChoice = <PhotoProvider></PhotoProvider>;
             photosList = this.props.searchResults.searchResults.map((photo) => 
                 <GridListTile key={photo.id} cols={1}>
                     <img src={photo.smallImageURL} alt="from-pixabay"/>
@@ -107,7 +138,7 @@ class Gallery extends Component {
                         actionIcon={
                             <div>
                             <IconButton className={classes.iconHover} onClick={() => this.onClickStar(photo, "star")}>
-                                <Star />
+                                <Star /> 
                             </IconButton>
                             <IconButton className={classes.icon} onClick={() => this.onClick(photo, "fullscreen")}>
                                 <Fullscreen />
@@ -122,6 +153,7 @@ class Gallery extends Component {
         
         return (
             <div>
+                {photoProviderChoice}
                 <div className={classes.root}>
                     <GridList cellHeight={160} className={classes.gridList} cols={3}>
                         {photosList}
@@ -133,7 +165,6 @@ class Gallery extends Component {
                     </Dialog>
                 </div>
                 {pagination}
-                
             </div>
         )
     }
