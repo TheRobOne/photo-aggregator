@@ -2,48 +2,23 @@ import axios from 'axios';
 import { _ } from 'underscore';
 
 import { SEARCH } from './types';
+//import { ADD_TO_FAVOURITE } from './types';
 
 const PIXABAY_KEY = '6771879-3964c448f80d04a7a92b37074';
 const UNSPLASH_KEY = '82246bcaf2872b60ecc77309da69ce419a5e02ff463d976fff8c6bffbc0a1f8d';
 
 export const searchPhotos = (tag, pageNumber) => dispatch => {
     axios.all([
-        axios.get(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${tag}&image_type=photo&pretty=true&page=${pageNumber}&per_page=7`),
-        axios.get(`https://api.unsplash.com/search/photos/?client_id=${UNSPLASH_KEY}&query=${tag}&page=${pageNumber}&per_page=8`)
+        axios.get(`https://pixabay.com/api/?key=${PIXABAY_KEY}&q=${tag}&image_type=photo&pretty=true&page=${pageNumber}&per_page=8`),
+        axios.get(`https://api.unsplash.com/search/photos/?client_id=${UNSPLASH_KEY}&query=${tag}&page=${pageNumber}&per_page=7`)
     ])
     .then(axios.spread((pixabayRes, unsplashRes) => {
-        let photoList = [];
-        let photoListItem = {};
 
-        pixabayRes.data.hits.map(photo => {
-            photoListItem = {
-                fullImageURL: photo.largeImageURL,
-                smallImageURL: photo.webformatURL,
-                id: photo.id,
-                user: photo.user,
-                userURL: `https://pixabay.com/en/users/${photo.user}-${photo.user_id}/`,
-                userAvatar: photo.userImageURL,
-                tag: tag,
-                provider: 'pixabay'
-            }
-            return photoList.push(photoListItem);
-        });
+        const pixabayList = mapPixabayPhotos(pixabayRes.data.hits, tag);
+        const unsplashList = mapUnsplashPhotos(unsplashRes.data.results, tag);
 
-        unsplashRes.data.results.map(photo => {
-            photoListItem = {
-                fullImageURL: photo.urls.full,
-                smallImageURL: photo.urls.small,
-                id: photo.id,
-                user: photo.user.username,
-                userURL: `https://unsplash.com/@${photo.user.username}`,
-                userAvatar: photo.user.profile_image.small,
-                tag: tag,
-                provider: 'unsplash'
-            }
-            return photoList.push(photoListItem);
-        });
-        
-        let shuffledPhotoList = _.shuffle(photoList);
+        const photosList = [...pixabayList,...unsplashList];
+        const shuffledPhotoList = _.shuffle(photosList);
 
         dispatch({
             type: SEARCH,
@@ -53,7 +28,66 @@ export const searchPhotos = (tag, pageNumber) => dispatch => {
     .catch(err => 
         dispatch({
             type: SEARCH,
-            paylaod: null
+            payload: null
         })
     );
 }
+
+function mapPixabayPhotos(photos, tag) {
+    let photoList = [];
+    let photoListItem = {};
+
+    photos.map(photo => {
+        photoListItem = {
+            fullImageURL: photo.largeImageURL,
+            smallImageURL: photo.webformatURL,
+            id: photo.id,
+            user: photo.user,
+            userURL: `https://pixabay.com/en/users/${photo.user}-${photo.user_id}/`,
+            userAvatar: photo.userImageURL,
+            tag: tag,
+            provider: 'pixabay'
+        }
+        return photoList.push(photoListItem);
+    });
+
+    return photoList;
+}
+
+function mapUnsplashPhotos(photos, tag) {
+    let photoList = [];
+    let photoListItem = {};
+
+    photos.map(photo => {
+        photoListItem = {
+            fullImageURL: photo.urls.full,
+            smallImageURL: photo.urls.small,
+            id: photo.id,
+            user: photo.user.username,
+            userURL: `https://unsplash.com/@${photo.user.username}`,
+            userAvatar: photo.user.profile_image.small,
+            tag: tag,
+            provider: 'unsplash'
+        }
+        return photoList.push(photoListItem);
+    });
+
+    return photoList;
+}
+
+// export const addToFavourite = (photo) => dispatch => {
+//     console.log(photo);
+//     axios.post('http://localhost:4200/photos/favourite', photo)
+//     .then(res => {
+//         dispatch({
+//             type: ADD_TO_FAVOURITE,
+//             payload: res.data
+//         })
+//     })
+//     .catch(err=>
+//         dispatch({
+//             type: ADD_TO_FAVOURITE,
+//             payload: null
+//         })
+//     )
+// } 
