@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
 import { searchPhotos } from '../../actions/photosActions';
+import PaginationButton from './PaginationButton';
 
 const styles = theme => ({
     button: {
@@ -21,9 +22,19 @@ class Pagination extends Component {
         this.props.searchPhotos(this.props.searchResults.searchResults[0].tag, number);
     }
 
+    createPagination = (classes) => {
+        let pagination = [];
+        for (let i = 1; i <= 10; i++){
+            pagination.push(
+                <PaginationButton key={i} pageNumber={i} onClick={() => this.onClick(i)}/>
+            )
+        }
+        return pagination;
+    }
+
     render() {
         const { classes } = this.props;
-        let divStyle = {
+        const divStyle = {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'center',
@@ -31,36 +42,7 @@ class Pagination extends Component {
         }
         return (
             <div style={divStyle}>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(1)}>
-                    1
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(2)}>
-                    2
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(3)}>
-                    3
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(4)}>
-                    4
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(5)}>
-                    5
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(6)}>
-                    6
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(7)}>
-                    7
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(8)}>
-                    8
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(9)}>
-                    9
-                </Button>
-                <Button variant="contained" color="primary" className={classes.button} onClick={() => this.onClick(10)}>
-                    10
-                </Button>
+                {this.createPagination(classes)}
             </div>
         )
     }
