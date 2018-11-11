@@ -14,8 +14,9 @@ export const searchPhotos = (tag, pageNumber) => dispatch => {
     ])
     .then(axios.spread((pixabayRes, unsplashRes) => {
 
-        const pixabayList = mapPixabayPhotos(pixabayRes.data.hits, tag);
-        const unsplashList = mapUnsplashPhotos(unsplashRes.data.results, tag);
+        const photosCount = pixabayRes.data.totalHits;// + unsplashRes.data.total;
+        const pixabayList = mapPixabayPhotos(pixabayRes.data.hits, tag, photosCount);
+        const unsplashList = mapUnsplashPhotos(unsplashRes.data.results, tag, photosCount);
 
         const photosList = [...pixabayList,...unsplashList];
         const shuffledPhotoList = _.shuffle(photosList);
@@ -40,8 +41,8 @@ export const searchFromOneProvider = (provider, tag, pageNumber) => dispatch => 
     else if(provider === 'unsplash') url =`https://api.unsplash.com/search/photos/?client_id=${UNSPLASH_KEY}&query=${tag}&page=${pageNumber}&per_page=15`;
     axios.get(url)
     .then(response => {
-        if(provider === 'pixabay') photoList = mapPixabayPhotos(response.data.hits, tag);
-        else if(provider === 'unsplash') photoList = mapUnsplashPhotos(response.data.results, tag);
+        if(provider === 'pixabay') photoList = mapPixabayPhotos(response.data.hits, tag, response.data.totalHits);
+        else if(provider === 'unsplash') photoList = mapUnsplashPhotos(response.data.results, tag, response.data.total);
         dispatch({
             type: SEARCH,
             payload: photoList
@@ -55,7 +56,7 @@ export const searchFromOneProvider = (provider, tag, pageNumber) => dispatch => 
     );
 }
 
-function mapPixabayPhotos(photos, tag) {
+const mapPixabayPhotos = (photos, tag, photosCount) => {
     let photoList = [];
     let photoListItem = {};
 
@@ -68,7 +69,8 @@ function mapPixabayPhotos(photos, tag) {
             userURL: `https://pixabay.com/en/users/${photo.user}-${photo.user_id}/`,
             userAvatar: photo.userImageURL,
             tag: tag,
-            provider: 'pixabay'
+            provider: 'pixabay',
+            photosCount: photosCount
         }
         return photoList.push(photoListItem);
     });
@@ -76,7 +78,7 @@ function mapPixabayPhotos(photos, tag) {
     return photoList;
 }
 
-function mapUnsplashPhotos(photos, tag) {
+const mapUnsplashPhotos = (photos, tag, photosCount) => {
     let photoList = [];
     let photoListItem = {};
 
@@ -89,7 +91,8 @@ function mapUnsplashPhotos(photos, tag) {
             userURL: `https://unsplash.com/@${photo.user.username}`,
             userAvatar: photo.user.profile_image.small,
             tag: tag,
-            provider: 'unsplash'
+            provider: 'unsplash',
+            photosCount: photosCount
         }
         return photoList.push(photoListItem);
     });

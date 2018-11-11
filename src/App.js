@@ -5,7 +5,7 @@ import store from './store';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 
 import Navbar from './components/Navbar/Navbar';
-import Gallery from './components/Gallery/Gallery';
+import MainPage from './components/MainPage/MainPage';
 
 const theme = createMuiTheme({
   typography: {
@@ -19,8 +19,8 @@ class App extends Component {
       <Provider store={store}>
         <MuiThemeProvider theme={theme}>
           <div className="App">
-            <Navbar></Navbar>
-            <Gallery></Gallery>
+            <Navbar/>
+            <MainPage/>
           </div>
         </MuiThemeProvider>
       </Provider>

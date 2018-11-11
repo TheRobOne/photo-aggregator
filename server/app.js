@@ -27,7 +27,8 @@ app.use(bodyParser.json());
 //route files
 let users = require('./routes/user');
 app.use('/users', users);
-
+let photos = require('./routes/photos');
+app.use('/photos', photos);
 
 app.get('/', (req, res, next) => res.send('Hello World!'))
 

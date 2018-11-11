@@ -108,9 +108,7 @@ class Gallery extends Component {
         let { classes } = this.props;
 
         let photosList = null;
-        let pagination = null;
         let dialogContent = null;
-        let photoProviderChoice = null;
 
         if(this.state.dialogType === 'fullscreen'){
             dialogContent = (
@@ -124,36 +122,29 @@ class Gallery extends Component {
             );
         } 
 
-
-        if (this.props.searchResults.searchResults.length === 0){
-            photosList = (<div><h1>tu bedzie initial page</h1></div>)
-        } else {
-            photoProviderChoice = <PhotoProvider></PhotoProvider>;
-            photosList = this.props.searchResults.searchResults.map((photo) => 
-                <GridListTile key={photo.id} cols={1}>
-                    <img src={photo.smallImageURL} alt="from-pixabay"/>
-                    <GridListTileBar
-                    title={"from: " + photo.provider}
-                        subtitle={<Button className={classes.button} href={photo.userURL}>by: {photo.user}</Button>}
-                        actionIcon={
-                            <div>
-                            <IconButton className={classes.iconHover} onClick={() => this.onClickStar(photo, "star")}>
-                                <Star /> 
-                            </IconButton>
-                            <IconButton className={classes.icon} onClick={() => this.onClick(photo, "fullscreen")}>
-                                <Fullscreen />
-                            </IconButton>
-                            </div>
-                        }
-                    />
-                </GridListTile>
-            );
-            pagination = <Pagination/>
-        }
+        photosList = this.props.searchResults.searchResults.map((photo) => 
+            <GridListTile key={photo.id} cols={1}>
+                <img src={photo.smallImageURL} alt="from-pixabay"/>
+                <GridListTileBar
+                title={"from: " + photo.provider}
+                    subtitle={<Button className={classes.button} href={photo.userURL}>by: {photo.user}</Button>}
+                    actionIcon={
+                        <div>
+                        <IconButton className={classes.iconHover} onClick={() => this.onClickStar(photo, "star")}>
+                            <Star /> 
+                        </IconButton>
+                        <IconButton className={classes.icon} onClick={() => this.onClick(photo, "fullscreen")}>
+                            <Fullscreen />
+                        </IconButton>
+                        </div>
+                    }
+                />
+            </GridListTile>
+        );
         
         return (
             <div>
-                {photoProviderChoice}
+                <PhotoProvider/>
                 <div className={classes.root}>
                     <GridList cellHeight={160} className={classes.gridList} cols={3}>
                         {photosList}
@@ -164,7 +155,7 @@ class Gallery extends Component {
                         {dialogContent}
                     </Dialog>
                 </div>
-                {pagination}
+                <Pagination/>
             </div>
         )
     }
