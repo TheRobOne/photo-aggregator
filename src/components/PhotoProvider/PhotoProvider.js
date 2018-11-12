@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import { withRouter } from 'react-router-dom'; 
 
 import { searchPhotos } from '../../actions/photosActions';
 import { searchFromOneProvider } from '../../actions/photosActions';
@@ -22,9 +23,11 @@ class PhotoProvider extends Component {
     onClick(photoProvider) {
         if(photoProvider === 'pixabay' || photoProvider === 'unsplash'){
             this.props.searchFromOneProvider(photoProvider, this.props.searchResults.searchResults[0].tag, 1);
+            this.props.history.push(`/search/${photoProvider}/${this.props.searchResults.searchResults[0].tag}/1`)
         } 
         else if(photoProvider === 'all'){
             this.props.searchPhotos(this.props.searchResults.searchResults[0].tag, 1);
+            this.props.history.push(`/search/all/${this.props.searchResults.searchResults[0].tag}/1`)
         } 
     }
 
@@ -61,4 +64,4 @@ const mapStateToProps = state => ({
     searchResults: state.searchResults
 });
 
-export default connect(mapStateToProps, { searchPhotos, searchFromOneProvider })(withStyles(styles)(PhotoProvider));
+export default connect(mapStateToProps, { searchPhotos, searchFromOneProvider })(withStyles(styles)(withRouter(PhotoProvider)));

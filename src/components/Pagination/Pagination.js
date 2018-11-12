@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom'; 
 
 import { searchPhotos } from '../../actions/photosActions';
 import { searchFromOneProvider } from '../../actions/photosActions';
@@ -19,13 +20,14 @@ class Pagination extends Component {
     onClick(pageNumber){
         const { searchResults } = this.props.searchResults;
         if(searchResults.some(photo => photo.provider === 'unsplash') && searchResults.some(photo => photo.provider === 'pixabay')){
-            console.log("elo")
             this.props.searchPhotos(this.props.searchResults.searchResults[0].tag, pageNumber);
+            this.props.history.push(`/search/all/${this.props.searchResults.searchResults[0].tag}/${pageNumber}`)
         } else if(searchResults.some(photo => photo.provider === 'unsplash')){
             this.props.searchFromOneProvider('unsplash', this.props.searchResults.searchResults[0].tag, 1);
+            this.props.history.push(`/search/unsplash/${this.props.searchResults.searchResults[0].tag}/${pageNumber}`)
         } else {
             this.props.searchFromOneProvider('pixabay', this.props.searchResults.searchResults[0].tag, 1);
-            console.log("elo2")
+            this.props.history.push(`/search/pixabay/${this.props.searchResults.searchResults[0].tag}/${pageNumber}`)
         }
         
         this.setState({currentPage: pageNumber});
@@ -80,4 +82,4 @@ const mapStateToProps = state => ({
     searchResults: state.searchResults
 });
 
-export default connect(mapStateToProps, { searchPhotos, searchFromOneProvider })(Pagination);
+export default connect(mapStateToProps, { searchPhotos, searchFromOneProvider })(withRouter(Pagination));

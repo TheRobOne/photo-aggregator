@@ -5,6 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { fade } from '@material-ui/core/styles/colorManipulator';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import { withRouter } from 'react-router-dom'; 
 
 import { searchPhotos } from '../../actions/photosActions';
 
@@ -71,7 +72,7 @@ class Search extends Component {
     onSubmit(event) {
         event.preventDefault();
         this.props.searchPhotos(this.state.searchInput, 1);
-
+        this.props.history.push(`/search/all/${this.state.searchInput}/1`);
       }
 
     onChange(event) {
@@ -110,4 +111,4 @@ Search.propTypes = {
 const mapStateToProps = state => ({
 });
 
-export default connect(mapStateToProps, { searchPhotos })(withStyles(styles)(Search));
+export default connect(mapStateToProps, { searchPhotos })(withStyles(styles)(withRouter(Search)));
