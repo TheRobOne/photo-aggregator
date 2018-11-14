@@ -7,7 +7,6 @@ import './App.css';
 import store from './store';
 import history from './history';
 import Navbar from './components/Navbar/Navbar';
-import MainPage from './components/MainPage/MainPage';
 
 const theme = createMuiTheme({
   typography: {
@@ -23,7 +22,6 @@ class App extends Component {
           <MuiThemeProvider theme={theme}>
             <div className="App">
               <Navbar/>
-              <MainPage/>
             </div>
           </MuiThemeProvider>
         </Router>

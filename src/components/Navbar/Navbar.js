@@ -1,12 +1,16 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { withRouter, Route, Link } from 'react-router-dom';
 
 import Search from '../Search/Search';
 import Login from '../Login/Login';
+import MainPage from '../MainPage/MainPage';
+import { clearSearchResults } from '../../actions/photosActions';
 
 const styles = theme => ({
     root: {
@@ -34,29 +38,39 @@ const styles = theme => ({
     }
   });
 
-const Navbar = (props) => {
-    const { classes } = props;
+class Navbar extends Component {
 
-    return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" color="inherit">
-                        Photo aggregator
-                    </Typography>
-                    <Search/>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <Login/>
-                    </div>
-                </Toolbar>
-            </AppBar>
-        </div>
-    );
+    render(){
+        const { classes } = this.props;
+
+        return (
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Button component={Link} to="/" onClick={() => this.props.clearSearchResults()}>
+                            Photo Aggregator
+                        </Button>
+                        <Search/>
+                        <div className={classes.grow} />
+                        <div className={classes.sectionDesktop}>
+                            <Login/>
+                        </div>
+                    </Toolbar>
+                </AppBar>
+
+                <Route path="/" component={MainPage}/>
+            </div>
+        );
+    }
 }
 
+
 Navbar.propTypes = {
+    clearSearchResults: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired
 };
+  
+const mapStateToProps = state => ({
+});
 
-export default withStyles(styles)(Navbar);
+export default connect(mapStateToProps, { clearSearchResults })(withStyles(styles)(withRouter(Navbar)));

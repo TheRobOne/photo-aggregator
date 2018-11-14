@@ -8,9 +8,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import FacebookLogin from "react-facebook-login";
 import Avatar from '@material-ui/core/Avatar';
+import { Route, Link } from 'react-router-dom';
 
 import { searchPhotos } from '../../actions/photosActions';
 import { loginOrRegisterUser } from '../../actions/authorizationActions';
+import Profile from '../Profile/Profile';
 
 const styles = theme => ({
     root: {
@@ -48,7 +50,6 @@ class Login extends Component {
     }
 
     facebookResponse = response => {
-        console.log(response);
         let user = {
             userID: response.userID,
             name: response.name,
@@ -82,9 +83,11 @@ class Login extends Component {
             );
         } else {
             loginContent = (
+                <Link to={`/profile/${sessionStorage.getItem("name")}`}>
                 <div className={classes.row}>
                     <Avatar alt={sessionStorage.getItem("name")} src={sessionStorage.getItem("avatar")} className={classes.avatar} />
                 </div>
+                </Link>
             );
         }
 
@@ -112,6 +115,7 @@ class Login extends Component {
                         />
                 </DialogContent>
             </Dialog>
+            <Route path={`/profile/${sessionStorage.getItem("name")}`} component={Profile}/>
         </React.Fragment>
         );
     }

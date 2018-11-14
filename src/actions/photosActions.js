@@ -56,6 +56,13 @@ export const searchFromOneProvider = (provider, tag, pageNumber) => dispatch => 
     );
 }
 
+export const clearSearchResults = () => dispatch => {
+    dispatch({
+        type: SEARCH,
+        payload: []
+    })
+}
+
 const mapPixabayPhotos = (photos, tag, photosCount) => {
     let photoList = [];
     let photoListItem = {};
