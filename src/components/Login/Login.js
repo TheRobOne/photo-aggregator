@@ -10,7 +10,6 @@ import FacebookLogin from "react-facebook-login";
 import Avatar from '@material-ui/core/Avatar';
 import { Route, Link, withRouter } from 'react-router-dom';
 
-import { searchPhotos } from '../../actions/photosActions';
 import { loginOrRegisterUser } from '../../actions/authorizationActions';
 import Profile from '../Profile/Profile';
 
@@ -62,12 +61,9 @@ class Login extends Component {
         sessionStorage.setItem('email', response.email);
         sessionStorage.setItem('avatar', response.picture.data.url);
 
+        this.props.history.push(`/profile/${user.userID}`);
         this.setState({ open: false });
     };
-
-    onClickFBLogin(){
-        this.props.history.push(`/profile/${sessionStorage.getItem('userID')}`);
-    }
 
     onClick(){
         this.setState({open: true})
@@ -110,7 +106,6 @@ class Login extends Component {
                             autoLoad={false}
                             fields="name,email,picture"
                             callback={this.facebookResponse}
-                            onClick={() => this.onClickFBLogin()}
                             style={{
                                 width: "400px",
                                 margin: "auto",
@@ -128,12 +123,12 @@ class Login extends Component {
 
 
 Login.propTypes = {
-    searchPhotos: PropTypes.func.isRequired,
     loginOrRegisterUser: PropTypes.func.isRequired,
     classes: PropTypes.object.isRequired
 };
   
 const mapStateToProps = state => ({
+    user: state.user
 });
 
-export default withRouter(connect(mapStateToProps, { searchPhotos, loginOrRegisterUser })(withStyles(styles)(Login)));
+export default withRouter(connect(mapStateToProps, { loginOrRegisterUser })(withStyles(styles)(Login)));

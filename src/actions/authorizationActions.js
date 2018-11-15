@@ -18,3 +18,9 @@ export const loginOrRegisterUser = (user) => dispatch => {
     )
 }
 
+export const logout = () => dispatch => {
+    dispatch({
+        type: LOGIN,
+        payload: null
+    })
+}
