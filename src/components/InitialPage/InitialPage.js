@@ -17,7 +17,7 @@ const InitialPage = (props) => {
     const { classes } = props;
     const pixabay = {
         providerName: 'Pixabay',
-        imageSrc: 'https://cdn.pixabay.com/photo/2016/08/14/17/31/pixabay-1593468_960_720.jpg',
+        imageSrc: '/pixabay_cover_photo.jpg',
         description: `
             Pixabay is a vibrant community of creatives, sharing copyright free images and videos. 
             All contents are released under Creative Commons CC0, 
@@ -28,7 +28,7 @@ const InitialPage = (props) => {
 
     const unsplash = {
         providerName: 'Unsplash',
-        imageSrc: 'https://images.unsplash.com/photo-1529458600305-b5bdde535770?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=c39705a52156ae53ccca570efa15834a&auto=format&fit=crop&w=1350&q=80',
+        imageSrc: '/unsplash_cover_photo.jpeg',
         description: `
             Founded 4 years ago as a humble Tumblr blog, 
             Unsplash has grown into an industry-leading photography community. 
