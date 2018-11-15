@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { _ } from 'underscore';
 
 import { SEARCH } from './types';
-//import { ADD_TO_FAVOURITE } from './types';
+import { GET_FAVOURITE_PHOTO } from './types';
 
 const PIXABAY_KEY = '6771879-3964c448f80d04a7a92b37074';
 const UNSPLASH_KEY = '82246bcaf2872b60ecc77309da69ce419a5e02ff463d976fff8c6bffbc0a1f8d';
@@ -17,13 +16,16 @@ export const searchPhotos = (tag, pageNumber) => dispatch => {
         const photosCount = pixabayRes.data.totalHits;// + unsplashRes.data.total;
         const pixabayList = mapPixabayPhotos(pixabayRes.data.hits, tag, photosCount, pageNumber);
         const unsplashList = mapUnsplashPhotos(unsplashRes.data.results, tag, photosCount, pageNumber);
-
-        const photosList = [...pixabayList,...unsplashList];
-        const shuffledPhotoList = _.shuffle(photosList);
+        const l = Math.min(pixabayList.length, unsplashList.length);
+        let photoList = [];
+        for (let i = 0; i < l; i++) {
+            photoList.push(pixabayList[i], unsplashList[i]);
+        }
+        photoList.push(...pixabayList.slice(l), ...unsplashList.slice(l));
 
         dispatch({
             type: SEARCH,
-            payload: shuffledPhotoList
+            payload: photoList
         })
     }))
     .catch(err => 
@@ -109,19 +111,19 @@ const mapUnsplashPhotos = (photos, tag, photosCount, pageNumber) => {
     return photoList;
 }
 
-// export const addToFavourite = (photo) => dispatch => {
-//     console.log(photo);
-//     axios.post('http://localhost:4200/photos/favourite', photo)
-//     .then(res => {
-//         dispatch({
-//             type: ADD_TO_FAVOURITE,
-//             payload: res.data
-//         })
-//     })
-//     .catch(err=>
-//         dispatch({
-//             type: ADD_TO_FAVOURITE,
-//             payload: null
-//         })
-//     )
-// } 
+export const getFavouritePhotos = (photo) => dispatch => {
+    console.log(photo);
+    axios.post('http://localhost:4200/photos/favourite', photo)
+    .then(res => {
+        dispatch({
+            type: GET_FAVOURITE_PHOTO,
+            payload: res.data
+        })
+    })
+    .catch(err=>
+        dispatch({
+            type: GET_FAVOURITE_PHOTO,
+            payload: null
+        })
+    )
+} 

@@ -4,13 +4,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import GridList from '@material-ui/core/GridList';
 import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
-import Fullscreen from '@material-ui/icons/Fullscreen';
-import Star from '@material-ui/icons/Star';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import red from '@material-ui/core/colors/red';
 import DialogContent from '@material-ui/core/DialogContent';
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
@@ -18,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { searchPhotos } from '../../actions/photosActions';
 import Pagination from '../Pagination/Pagination';
 import PhotoProvider from '../PhotoProvider/PhotoProvider';
+import Photo from './Photo';
 
 const styles = theme => ({
     root: {
@@ -35,32 +30,9 @@ const styles = theme => ({
     subheader: {
       width: '100%',
     },
-    button: {
-        margin: '0px',
-        color: 'rgba(255, 255, 255, 255)',
-        mini: true,
-        variant: 'fab'
-      },
     input: {
         display: 'none',
     },
-    icon: {
-      color: 'rgba(255, 255, 255, 0.54)',
-    },
-    iconHover: {
-        margin: theme.spacing.unit * 2,
-        color: 'rgba(255, 255, 255, 0.54)',
-        '&:hover': {
-          color: red[800],
-        },
-    },
-    iconFavHover: {
-        margin: theme.spacing.unit * 2,
-        color: red[800],
-        '&:hover': {
-          color: 'rgba(255, 255, 255, 0.54)',
-        },
-    }
   });
 
 class Gallery extends Component {
@@ -69,14 +41,14 @@ class Gallery extends Component {
         open: false,
         currentPhoto: '',
         dialogType: '',
-        dialogMessage: 'You have to been loged in first.'
+        dialogMessage: 'You have to been logged in first.'
     }
 
-    onClick(photo, iconType){
+    onClickFullscreen(photo, iconType){
         this.setState({open: true, currentPhoto: photo, dialogType: iconType});
     }
 
-    onClickStar(photo, iconType){
+    onClickStar(photo){
         if (sessionStorage.getItem("userID")) {
             const Photo = {
                 fullPhotoURL: photo.fullImageURL,
@@ -93,7 +65,7 @@ class Gallery extends Component {
                 })
                 .catch(err => {
                     console.log("err");
-                    this.setState({open: true, currentPhoto: photo, dialogType: iconType, dialogMessage: 'Error while adding photo to favourities'});
+                    this.setState({open: true, currentPhoto: photo, dialogType: 'star', dialogMessage: 'Error while adding photo to favourities'});
                 })
 
         } else {
@@ -102,7 +74,7 @@ class Gallery extends Component {
     }
 
     handleClose = () => {
-        this.setState({ open: false, dialogMessage: 'You have to been loged in first.' });
+        this.setState({ open: false, dialogMessage: 'You have to been logged in first.' });
       }
 
     render() {
@@ -125,21 +97,7 @@ class Gallery extends Component {
 
         photosList = this.props.searchResults.searchResults.map((photo) => 
             <GridListTile key={photo.id} cols={1}>
-                <img src={photo.smallImageURL} alt="from-pixabay"/>
-                <GridListTileBar
-                title={"from: " + photo.provider}
-                    subtitle={<Button className={classes.button} href={photo.userURL}>by: {photo.user}</Button>}
-                    actionIcon={
-                        <div>
-                        <IconButton className={classes.iconHover} onClick={() => this.onClickStar(photo, "star")}>
-                            <Star /> 
-                        </IconButton>
-                        <IconButton className={classes.icon} onClick={() => this.onClick(photo, "fullscreen")}>
-                            <Fullscreen />
-                        </IconButton>
-                        </div>
-                    }
-                />
+                <Photo key={photo.id} photo={photo} onClickFullscreen={() => this.onClickFullscreen(photo, "fullscreen")} onClickStar={() => this.onClickStar(photo)}/>
             </GridListTile>
         );
         
