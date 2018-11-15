@@ -9,7 +9,6 @@ import { withRouter, Route, Link } from 'react-router-dom';
 
 import Search from '../Search/Search';
 import Login from '../Login/Login';
-import MainPage from '../MainPage/MainPage';
 import { clearSearchResults } from '../../actions/photosActions';
 
 const styles = theme => ({
@@ -51,6 +50,11 @@ class Navbar extends Component {
                             Photo Aggregator
                         </Button>
                         <Search/>
+                        {
+                            this.props.searchResults.searchResults.length > 0
+                            ? <Route exact path={`/search/all/${this.props.searchResults.searchResults[0].tag}}/1`}/>
+                            : null
+                        }
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
                             <Login/>
@@ -58,7 +62,6 @@ class Navbar extends Component {
                     </Toolbar>
                 </AppBar>
 
-                <Route path="/" component={MainPage}/>
             </div>
         );
     }
@@ -71,6 +74,7 @@ Navbar.propTypes = {
 };
   
 const mapStateToProps = state => ({
+    searchResults: state.searchResults
 });
 
 export default connect(mapStateToProps, { clearSearchResults })(withStyles(styles)(withRouter(Navbar)));

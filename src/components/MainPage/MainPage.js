@@ -9,7 +9,7 @@ const MainPage = (props) => {
         <React.Fragment>
             { props.searchResults.searchResults.length === 0
                 ? <InitialPage/>
-                : <Gallery/>
+                :   <Gallery/>
             }
         </React.Fragment>
     );

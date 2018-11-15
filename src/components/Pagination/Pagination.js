@@ -13,7 +13,7 @@ class Pagination extends Component {
         super(props);
         this.state = {
             currentPage: 1,
-            pagesCount: Math.round(this.props.searchResults.searchResults[0].photosCount / 15)
+            pagesCount: 30
         }
     }
 
@@ -82,4 +82,4 @@ const mapStateToProps = state => ({
     searchResults: state.searchResults
 });
 
-export default connect(mapStateToProps, { searchPhotos, searchFromOneProvider })(withRouter(Pagination));
+export default withRouter(connect(mapStateToProps, { searchPhotos, searchFromOneProvider })(Pagination));

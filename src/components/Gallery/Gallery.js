@@ -13,6 +13,7 @@ import Dialog from '@material-ui/core/Dialog';
 import red from '@material-ui/core/colors/red';
 import DialogContent from '@material-ui/core/DialogContent';
 import axios from 'axios';
+import { withRouter } from 'react-router-dom';
 
 import { searchPhotos } from '../../actions/photosActions';
 import Pagination from '../Pagination/Pagination';
@@ -169,4 +170,4 @@ const mapStateToProps = state => ({
     searchResults: state.searchResults
 });
 
-export default connect(mapStateToProps, { searchPhotos })(withStyles(styles)(Gallery));
+export default withRouter(connect(mapStateToProps, { searchPhotos })(withStyles(styles)(Gallery)));
