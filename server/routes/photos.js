@@ -12,7 +12,7 @@ router.post('/favourite', (req,res) => {
 
 router.get('/favourite/:userID', (req,res) => {
     FavPhoto.getPhotos(req.params.userID, (err, photos) => {
-        if(err) res.status(500).send({message: 'error while adding photo'});
+        if(err) res.status(500).send({message: 'error while getting photos'});
         res.send(photos);
     });
 });

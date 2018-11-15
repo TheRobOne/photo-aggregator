@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { SEARCH } from './types';
-import { GET_FAVOURITE_PHOTO } from './types';
 
 const PIXABAY_KEY = '6771879-3964c448f80d04a7a92b37074';
 const UNSPLASH_KEY = '82246bcaf2872b60ecc77309da69ce419a5e02ff463d976fff8c6bffbc0a1f8d';
@@ -110,20 +109,3 @@ const mapUnsplashPhotos = (photos, tag, photosCount, pageNumber) => {
 
     return photoList;
 }
-
-export const getFavouritePhotos = (photo) => dispatch => {
-    console.log(photo);
-    axios.post('http://localhost:4200/photos/favourite', photo)
-    .then(res => {
-        dispatch({
-            type: GET_FAVOURITE_PHOTO,
-            payload: res.data
-        })
-    })
-    .catch(err=>
-        dispatch({
-            type: GET_FAVOURITE_PHOTO,
-            payload: null
-        })
-    )
-} 

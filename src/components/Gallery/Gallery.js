@@ -37,11 +37,15 @@ const styles = theme => ({
 
 class Gallery extends Component {
 
-    state = {
-        open: false,
-        currentPhoto: '',
-        dialogType: '',
-        dialogMessage: 'You have to been logged in first.'
+    constructor(props){
+        super(props);
+        this.state = {
+            open: false,
+            currentPhoto: '',
+            dialogType: '',
+            dialogMessage: 'You have to been logged in first.'
+        }
+        this.handleClose = this.handleClose.bind(this);
     }
 
     onClickFullscreen(photo, iconType){

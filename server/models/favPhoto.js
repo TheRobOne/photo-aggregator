@@ -44,7 +44,10 @@ const favPhotoSchema = new Schema({
 let FavPhoto = module.exports = mongoose.model('favPhoto', favPhotoSchema);
 
 module.exports.getPhotos = (userID, callback) => {
-    FavPhoto.find(userID, callback);
+    const query = {
+        userID: userID
+    }
+    FavPhoto.find(query, callback);
 }
 
 module.exports.addPhoto = (photo, callback) => {
