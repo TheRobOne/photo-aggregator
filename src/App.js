@@ -8,6 +8,7 @@ import store from './store';
 import Navbar from './components/Navbar/Navbar';
 import InitialPage from './components/InitialPage/InitialPage';
 import Gallery from './components/Gallery/Gallery';
+import Profile from './components/Profile/Profile';
 
 const theme = createMuiTheme({
   typography: {
@@ -25,7 +26,8 @@ class App extends Component {
               <Navbar/>
               <Switch>
                 <Route exact path="/" component={InitialPage}/>
-                <Route path="/search" component={Gallery}/>
+                <Route path="/search/:provider/:tag/:pageNumber" component={Gallery}/>
+                <Route path="/profile/:userID" component={Profile}/>
               </Switch>
             </div>
           </MuiThemeProvider>

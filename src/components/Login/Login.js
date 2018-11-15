@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
 import FacebookLogin from "react-facebook-login";
 import Avatar from '@material-ui/core/Avatar';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link, Redirect, withRouter } from 'react-router-dom';
 
 import { searchPhotos } from '../../actions/photosActions';
 import { loginOrRegisterUser } from '../../actions/authorizationActions';
@@ -63,6 +63,7 @@ class Login extends Component {
         sessionStorage.setItem('avatar', response.picture.data.url);
 
         this.setState({ open: false });
+        return <Redirect to={`/profile/${user.userID}`}/>
     };
 
     onClick(){
@@ -83,7 +84,7 @@ class Login extends Component {
             );
         } else {
             loginContent = (
-                <Link to={`/profile/${sessionStorage.getItem("name")}`}>
+                <Link to={`/profile/${sessionStorage.getItem("userID")}`}>
                 <div className={classes.row}>
                     <Avatar alt={sessionStorage.getItem("name")} src={sessionStorage.getItem("avatar")} className={classes.avatar} />
                 </div>
@@ -131,4 +132,4 @@ Login.propTypes = {
 const mapStateToProps = state => ({
 });
 
-export default connect(mapStateToProps, { searchPhotos, loginOrRegisterUser })(withStyles(styles)(Login));
+export default withRouter(connect(mapStateToProps, { searchPhotos, loginOrRegisterUser })(withStyles(styles)(Login)));
